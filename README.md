@@ -17,10 +17,15 @@ Scale Networks using Supervised Learning", CS229, Stanford, 2019.
 3. Activate it (Windows PowerShell): `venv\Scripts\Activate.ps1`
 4. Install dependencies: `pip install -r requirements.txt`
 
+5. Generate the dataset: python src/generate_data.py
+6. Train and evaluate: python src/train_model.py
+7. Extra analysis: python src/analysis.py
 
-1. Generate the dataset: python src/generate_data.py
-2. Train and evaluate: python src/train_model.py
-3. Extra analysis: python src/analysis.py
+## How to run
+
+1. Generate the dataset: `python src/generate_data.py`
+2. Train and evaluate: `python src/train_model.py`
+3. Extra analysis: `python src/analysis.py`
 
 Outputs are written to `data/` and `results/`.
 
