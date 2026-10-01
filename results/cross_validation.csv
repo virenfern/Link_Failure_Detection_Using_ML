@@ -1,0 +1,6 @@
+Classifier,Accuracy (mean),Precision (mean),Recall (mean),F1 (mean),Accuracy (std),Recall (std)
+Logistic Regression,0.9828,0.9661,0.9691,0.9676,0.0026,0.0047
+GDA,0.9722,0.993,0.9009,0.9447,0.0041,0.0153
+Linear SVM,0.9827,0.9637,0.971,0.9673,0.0028,0.0072
+RBF SVM,0.9827,0.9643,0.9703,0.9673,0.0031,0.0076
+QDA,0.9762,0.9242,0.9912,0.9565,0.0047,0.0052

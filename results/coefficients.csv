@@ -1,0 +1,4 @@
+Classifier,theta0,theta1,theta2
+Logistic Regression,-8.7461,-0.7747,-1.1954
+GDA,-12.0559,-0.9517,-1.2681
+Linear SVM,-2.4904,-0.2236,-0.3429
