@@ -19,8 +19,6 @@ Scale Networks using Supervised Learning", CS229, Stanford, 2019.
 
 ## How to run
 
-## How to run
-
 1. Generate the dataset: python src/generate_data.py
 2. Train and evaluate: python src/train_model.py
 3. Extra analysis: python src/analysis.py
