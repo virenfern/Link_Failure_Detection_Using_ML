@@ -1,5 +1,5 @@
 """
-train_models.py
+train_model.py
 Reads data/link_data.csv (from generate_data.py), builds the paper's features,
 trains Logistic Regression (Newton), GDA and Linear SVM, evaluates them, and
 tests span-level localization using the bad_span column.
