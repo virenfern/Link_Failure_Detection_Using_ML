@@ -17,7 +17,6 @@ Scale Networks using Supervised Learning", CS229, Stanford, 2019.
 3. Activate it (Windows PowerShell): `venv\Scripts\Activate.ps1`
 4. Install dependencies: `pip install -r requirements.txt`
 
-## How to run
 
 ## How to run
 
