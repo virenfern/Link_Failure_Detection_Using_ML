@@ -6,8 +6,10 @@ Each row = one end-to-end link made of 19 spans.
 Per span we store 4 raw metrics:
     span_loss, target_span_loss, amp_gain, target_gain
 Plus:
+    osnr      : simulated OSNR (dB)
     label     : 0 = healthy, 1 = not healthy (decided from simulated OSNR)
-    bad_span  : index (0-18) of the first damaged span, -1 if none (used to test localization)
+    bad_span  : index (0-18) of the first damaged span, -1 if none
+    bad_spans : ALL damaged span indices, e.g. "3;7" ("" if none) -> used to test localization
 
 Run from the repo root:
     python src/generate_data.py
@@ -48,15 +50,17 @@ def damage_links(span_loss, amp_gain):
     """Pick ~30% of links and damage 1-2 of their spans."""
     is_damaged = rng.random(N_LINKS) < FAIL_FRACTION
     bad_span = np.full(N_LINKS, -1)
+    all_bad = [""] * N_LINKS                             # NEW: every damaged span, e.g. "3;7"
 
     for i in np.where(is_damaged)[0]:
         n_bad = rng.integers(1, 3)                       # 1 or 2 damaged spans
         spans = rng.choice(N_SPANS, size=n_bad, replace=False)
         bad_span[i] = spans[0]                           # remember the first one
+        all_bad[i] = ";".join(str(int(j)) for j in spans)  # NEW: remember all of them
         for j in spans:
             span_loss[i, j] += rng.uniform(2, 12)        # extra fiber loss
             amp_gain[i, j] -= rng.uniform(1, 8)          # gain drifts from target
-    return span_loss, amp_gain, bad_span
+    return span_loss, amp_gain, bad_span, all_bad        # NEW: also return all_bad
 
 
 def compute_labels(span_loss, target_span_loss, amp_gain, target_gain):
@@ -68,7 +72,8 @@ def compute_labels(span_loss, target_span_loss, amp_gain, target_gain):
     return osnr, label
 
 
-def build_dataframe(span_loss, target_span_loss, amp_gain, target_gain, osnr, label, bad_span):
+def build_dataframe(span_loss, target_span_loss, amp_gain, target_gain,
+                    osnr, label, bad_span, all_bad):
     """Flatten everything into one wide table (one row per link)."""
     cols = {}
     for name, arr in [("span_loss", span_loss), ("target_span_loss", target_span_loss),
@@ -78,17 +83,18 @@ def build_dataframe(span_loss, target_span_loss, amp_gain, target_gain, osnr, la
     cols["osnr"] = osnr
     cols["label"] = label
     cols["bad_span"] = bad_span
+    cols["bad_spans"] = all_bad                          # NEW
     return pd.DataFrame(cols)
 
 
 def main():
     target_span_loss, target_gain = make_targets()
     span_loss, amp_gain = make_healthy_measurements(target_span_loss, target_gain)
-    span_loss, amp_gain, bad_span = damage_links(span_loss, amp_gain)
+    span_loss, amp_gain, bad_span, all_bad = damage_links(span_loss, amp_gain)   # NEW
     osnr, label = compute_labels(span_loss, target_span_loss, amp_gain, target_gain)
 
     df = build_dataframe(span_loss, target_span_loss, amp_gain, target_gain,
-                         osnr, label, bad_span)
+                         osnr, label, bad_span, all_bad)                          # NEW
 
     out_dir = Path(__file__).resolve().parent.parent / "data"
     out_dir.mkdir(exist_ok=True)
